@@ -10,6 +10,6 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Model model) {
 		model.addAttribute("message", "Hello World");
-		return "/WEB-INF/views/home/index.jsp";
+		return "home/index";
 	}
 }
