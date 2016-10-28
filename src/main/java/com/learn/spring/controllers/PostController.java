@@ -8,14 +8,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.learn.spring.dao.PostDao;
-import com.learn.spring.models.Post;
+//import com.learn.spring.dao.PostDao;
+//import com.learn.spring.models.Post;
+
+//import com.learn.spring.dao.impl.PostHibeDaoImpl;
+import com.learn.spring.entities.Post;
+import com.learn.spring.service.IPostService;
 
 @Controller
 public class PostController {
 	
+//	@Autowired
+//	private PostDao postDao;
+	
+//	@Autowired
+//	private PostHibeDao postDao;
+	
 	@Autowired
-	private PostDao postDao;
+	private IPostService postDao;
 	
 	@GetMapping("posts")
 	public String index(Model model) {
@@ -57,6 +67,8 @@ public class PostController {
 	
 	@PostMapping("/posts/delete/{id}")
 	public String postDelete(@PathVariable("id") int id) {
+		Post post = postDao.findId(id);
+		postDao.delete(post);
 		return "redirect:/posts";
 	}
 	

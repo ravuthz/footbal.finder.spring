@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12">
@@ -9,12 +8,12 @@
 	                <div class="row">
 	                	<div class="col-sm-12 col-md-offset-4 col-md-8">
 	                		
-	                		<h3>${param.formTitle}</h3>
+	                		<h3>${formTitle}</h3>
 	                		<hr/>
 	                	
-		                    <form action="${basePath}/${param.formAction}" method="POST" class="form">
+		                    <form action="${basePath}/${formAction}" method="POST" class="form">
 								<c:if test="${not empty post.id}">
-									<input type="hidden" name="id" value="${post.id}">								
+									<input type="text" name="id" value="${post.id}">								
 								</c:if>
 		
 		                        <div class="form-group">

@@ -1,9 +1,7 @@
 <%@ include file="../includes/header.jsp" %>
 
-<%
-	String formTitle = "Create";
-	String formAction = "posts/create";
-%>
+<c:set var="formTitle" value="Create" />
+<c:set var="formAction" value="posts/create" />
 
 <%@ include file="form.jsp" %>
 
