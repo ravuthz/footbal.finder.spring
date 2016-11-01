@@ -7,42 +7,41 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.learn.spring.dao.PostHibeDao;
-import com.learn.spring.entities.Post;
+import com.learn.spring.dao.ICategoryDao;
+import com.learn.spring.entities.Category;
 
 @Repository
-public class PostHibeDaoImpl implements PostHibeDao {
+public class CategoryDaoImpl implements ICategoryDao {
 
 	@Autowired
 	private SessionFactory session;
 
 	@Override
-	public Post findId(Object id) {
-		return session.getCurrentSession().get(Post.class, (int) id);
+	public Category findId(Object id) {
+		return session.getCurrentSession().get(Category.class, (int) id);
 	}
 
 	@Override
-	public Post findBy(String key, Object val) {
+	public Category findBy(String key, Object val) {
 		@SuppressWarnings("deprecation")
-		Criteria criteria = session.getCurrentSession().createCriteria(Post.class);
+		Criteria criteria = session.getCurrentSession().createCriteria(Category.class);
 		criteria.add(Restrictions.eq(key, val));
-		return (Post) criteria.uniqueResult();
+		return (Category) criteria.uniqueResult();
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
-	public List<Post> findAll() {
-		String hql = "from Post";
+	public List<Category> findAll() {
+		String hql = "from Category";
 		Query query = session.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
 
 	@Override
-	public boolean insert(Post post) {
+	public boolean insert(Category page) {
 		try {
-			session.getCurrentSession().persist(post);
+			session.getCurrentSession().persist(page);
 			return true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -51,9 +50,9 @@ public class PostHibeDaoImpl implements PostHibeDao {
 	}
 
 	@Override
-	public boolean update(Post post) {
+	public boolean update(Category page) {
 		try{
-			session.getCurrentSession().update(post);
+			session.getCurrentSession().update(page);
 			return true;
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
@@ -62,9 +61,9 @@ public class PostHibeDaoImpl implements PostHibeDao {
 	}
 
 	@Override
-	public boolean delete(Post post) {
+	public boolean delete(Category page) {
 		try{
-			session.getCurrentSession().delete(post);
+			session.getCurrentSession().delete(page);
 			return true;
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
@@ -74,10 +73,11 @@ public class PostHibeDaoImpl implements PostHibeDao {
 
 	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
 	@Override
-	public List<Post> search(String keyword) {
-		String sql = "from Post where title like :key or summary like :key or content like :key";
+	public List<Category> search(String keyword) {
+		String sql = "from Category where title like :key or content like :key";
 		Query query = session.getCurrentSession().createQuery(sql);
 		query.setParameter("key", "%" + keyword + "%");
-		return (List<Post>) query.list();
+		return (List<Category>) query.list();
 	}
+	
 }

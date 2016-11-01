@@ -2,9 +2,11 @@ package com.learn.spring.dao;
 
 import java.util.List;
 
-import com.learn.spring.models.Post;
+import com.learn.spring.entities.Post;
 
-public interface PostDao {
+
+public interface IPostDao {
+
 	public Post findId(Object id);
 	public Post findBy(String key, Object val);
 	public List<Post> findAll();

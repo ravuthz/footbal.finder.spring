@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.learn.spring.dao.PostHibeDao;
+import com.learn.spring.dao.IPostDao;
 import com.learn.spring.entities.Post;
 import com.learn.spring.service.IPostService;
 
@@ -14,7 +14,7 @@ import com.learn.spring.service.IPostService;
 public class PostServiceImpl implements IPostService {
 
 	@Autowired
-	private PostHibeDao postDao;
+	private IPostDao postDao;
 	
 	@Override
 	@Transactional

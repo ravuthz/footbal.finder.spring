@@ -6,7 +6,11 @@
 <meta charset="UTF-8">
 <title>Post - ${pageTitle}</title>
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-<body>
+<body>	
+	<% 
+		String currentPath = (String) request.getAttribute("currentPath"); 
+		String fullPath = (String) request.getRequestURI();
+	%>
 	<c:set var="basePath" value="${pageContext.request.contextPath}" />
 	<c:set var="basePath" value="/learn_spring" />
     <div class="container">
@@ -16,8 +20,9 @@
 	                <a class="navbar-brand" href="${basePath}/">Spring</a>
 	            </div>
 	            <ul class="nav navbar-nav">
-	                <li><a href="${basePath}/">Home</a></li>
-	                <li><a href="${basePath}/posts">Posts</a></li>
+	                <li class="<%= fullPath.contains("home/index") ? "active" : "" %>"><a href="${basePath}/">Home</a></li>
+	                <li class="<%= fullPath.contains("categories") ? "active" : "" %>"><a href="${basePath}/categories/">Categories</a></li>
+	                <li class="<%= fullPath.contains("posts") ? "active" : "" %>"><a href="${basePath}/posts/">Posts</a></li>
 	            </ul>
 	        </div>
 	    </nav>

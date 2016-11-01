@@ -1,111 +1,81 @@
 package com.learn.spring.dao.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import com.learn.spring.dao.PostDao;
-import com.learn.spring.models.Post;
+import com.learn.spring.dao.IPostDao;
+import com.learn.spring.entities.Post;
 
 @Repository
-public class PostDaoImpl implements PostDao {
+public class PostDaoImpl implements IPostDao {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
+	private SessionFactory session;
+
 	@Override
 	public Post findId(Object id) {
-		String sql = "SELECT * FROM posts WHERE id = ?";
-		return jdbcTemplate.queryForObject(sql, new RowMapper<Post>() {
-			@Override
-			public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Post post = new Post();
-				post.setId(rs.getInt("id"));
-				post.setTitle(rs.getString("title"));
-				post.setContent(rs.getString("content"));
-				post.setSummary(rs.getString("summary"));
-				return post;
-			}
-		}, new Object[]{id});
+		return session.getCurrentSession().get(Post.class, (int) id);
 	}
-	
+
 	@Override
 	public Post findBy(String key, Object val) {
-		String sql = "SELECT * FROM posts ORDER BY " + key + " DESC";
-		return jdbcTemplate.queryForObject(sql, new RowMapper<Post>() {
-			@Override
-			public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Post post = new Post();
-				post.setId(rs.getInt("id"));
-				post.setTitle(rs.getString("title"));
-				post.setContent(rs.getString("content"));
-				post.setSummary(rs.getString("summary"));
-				return post;
-			}
-		}, new Object[]{val});
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.getCurrentSession().createCriteria(Post.class);
+		criteria.add(Restrictions.eq(key, val));
+		return (Post) criteria.uniqueResult();
 	}
-		
+	
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
 	public List<Post> findAll() {
-		String sql = "SELECT * FROM posts ORDER BY id DESC";
-		List<Post> posts = new ArrayList<Post>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-		
-		for (Map<String, Object> row : rows) {
-			Post post = new Post();
-			post.setId((int) row.get("id"));
-			post.setTitle((String) row.get("title"));
-			post.setContent((String) row.get("content"));
-			post.setSummary((String) row.get("summary"));
-			posts.add(post);
-		}
-		
-		return posts;
+		String hql = "from Post";
+		Query query = session.getCurrentSession().createQuery(hql);
+		return query.list();
 	}
-	
-	@Override
-	public List<Post> search(String keyword) {
-		String key = "%" + keyword + "%";
-		String sql = "SELECT * FROM posts WHERE title LIKE ? OR content LIKE ? OR summary LIKE ?";
-		return jdbcTemplate.query(sql, new RowMapper<Post>() {
-			@Override
-			public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Post post = new Post();
-				post.setId(rs.getInt("id"));
-				post.setTitle(rs.getString("title"));
-				post.setContent(rs.getString("content"));
-				post.setSummary(rs.getString("summary"));
-				return post;
-			}
-		}, new Object[]{key, key, key});
-	}
-	
+
 	@Override
 	public boolean insert(Post post) {
-		String sql = "INSERT INTO posts (title, content, summary) VALUES (?, ?, ?)";
-		int i = jdbcTemplate.update(sql, new Object[] {post.getTitle(), post.getContent(), post.getSummary()});
-		return (i > 0);
+		try {
+			session.getCurrentSession().persist(post);
+			return true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return false;
 	}
 
 	@Override
 	public boolean update(Post post) {
-		String sql = "UPDATE posts SET title = ?, content = ?, summary = ? WHERE id = ?";
-		int i = jdbcTemplate.update(sql, new Object[] {post.getTitle(), post.getContent(), post.getSummary(), post.getId()});
-		return (i > 0);
+		try{
+			session.getCurrentSession().update(post);
+			return true;
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return false;
 	}
 
 	@Override
 	public boolean delete(Post post) {
-		String sql = "DELETE FROM posts WHERE id = ?";
-		int i = jdbcTemplate.update(sql, new Object[] {post.getId()});
-		return (i > 0);
+		try{
+			session.getCurrentSession().delete(post);
+			return true;
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return false;
 	}
 
+	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
+	@Override
+	public List<Post> search(String keyword) {
+		String sql = "from Post where title like :key or summary like :key or content like :key";
+		Query query = session.getCurrentSession().createQuery(sql);
+		query.setParameter("key", "%" + keyword + "%");
+		return (List<Post>) query.list();
+	}
 }

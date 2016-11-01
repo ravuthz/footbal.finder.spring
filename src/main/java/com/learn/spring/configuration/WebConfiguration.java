@@ -73,5 +73,5 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 		session.setHibernateProperties(hibernatteProperties());
 		return session;
 	}
-
+	
 }

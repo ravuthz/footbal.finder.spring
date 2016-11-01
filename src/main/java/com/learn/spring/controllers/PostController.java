@@ -8,28 +8,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-//import com.learn.spring.dao.PostDao;
-//import com.learn.spring.models.Post;
-
-//import com.learn.spring.dao.impl.PostHibeDaoImpl;
 import com.learn.spring.entities.Post;
+import com.learn.spring.service.ICategoryService;
 import com.learn.spring.service.IPostService;
 
 @Controller
 public class PostController {
 	
-//	@Autowired
-//	private PostDao postDao;
-	
-//	@Autowired
-//	private PostHibeDao postDao;
-	
 	@Autowired
 	private IPostService postDao;
 	
-	@GetMapping("posts")
+	@Autowired
+	private ICategoryService categoryDao;
+	
+	@GetMapping({"posts", "posts/index"})
 	public String index(Model model) {
-		model.addAttribute("pageTitle", "List");
+		model.addAttribute("pageTitle", "List Post");
 		model.addAttribute("posts", postDao.findAll());
 		return "posts/index";
 	}
@@ -37,6 +31,7 @@ public class PostController {
 	@GetMapping("posts/new")
 	public String getCreate(Model model) {
 		model.addAttribute("pageTitle", "Create");
+		model.addAttribute("categories", categoryDao.findAll());
 		return "posts/create";
 	}
 	
@@ -44,6 +39,7 @@ public class PostController {
 	public String getUpdate(Model model, @PathVariable ("id") int id ) {
 		model.addAttribute("pageTitle", "Update");
 		model.addAttribute("post", postDao.findId(id));
+		model.addAttribute("categories", categoryDao.findAll());
 		return "posts/update";
 	}
 	

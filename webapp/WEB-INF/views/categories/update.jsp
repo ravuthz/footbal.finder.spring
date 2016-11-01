@@ -1,7 +1,7 @@
 <%@ include file="../includes/header.jsp" %>
 
-<c:set var="formTitle" value="Post - Update" />
-<c:set var="formAction" value="posts/update" />
+<c:set var="formTitle" value="Category - Update" />
+<c:set var="formAction" value="categories/update" />
 
 <%@ include file="form.jsp" %>
 
